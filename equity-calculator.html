@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Equity Calculator for Your Next Purchase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --kw-red: #cc0033;
+            --kw-red-dark: #a00028;
+            --kw-red-light: #e6194d;
+            --kw-black: #1a1a1a;
+            --kw-grey: #4a4a4a;
+            --kw-grey-light: #e8e8e8;
+            --accent-gold: #d4af37;
+            --accent-silver: #c0c0c0;
+            --bg: #f5f5f5;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --border: #d4d4d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 3px solid var(--kw-red);
+            position: relative;
+        }
+        
+        .new-year-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--kw-red), var(--kw-red-dark));
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 15px rgba(204, 0, 51, 0.4);
+            animation: sparkle 3s ease-in-out infinite;
+            border: 2px solid white;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(204, 0, 51, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(204, 0, 51, 0.6); }
+        }
+        
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--kw-red);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .surprise-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .rate-reality-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .big-reveal-value {
+                font-size: 3rem;
+            }
+        }
+        
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 6px 12px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--kw-red), var(--kw-red-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--kw-black);
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-weight: 500;
+            pointer-events: none;
+        }
+        
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.5rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s ease;
+            background: var(--bg);
+        }
+        
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--kw-red);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px rgba(204, 0, 51, 0.1);
+        }
+        
+        input[type="number"]:hover,
+        input[type="text"]:hover {
+            border-color: var(--kw-red-light);
+        }
+        
+        .help-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+        
+        .results-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--kw-red) 0%, var(--kw-red-dark) 100%);
+            color: white;
+            padding: 2.5rem;
+            animation-delay: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .results-card::before {
+            content: '2026';
+            position: absolute;
+            right: -50px;
+            top: -50px;
+            font-size: 12rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+            font-family: 'Crimson Pro', serif;
+            pointer-events: none;
+            transform: rotate(-15deg);
+        }
+        
+        .results-card h2 {
+            color: white;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .big-reveal {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .big-reveal-label {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+        
+        .big-reveal-value {
+            font-family: 'Crimson Pro', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: var(--accent-gold);
+        }
+        
+        .big-reveal-subtext {
+            font-size: 1.15rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+        
+        .big-reveal-subtext span {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        .qualifier-check {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .qualifier-label {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .qualifier-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .qualifier-icon {
+            font-size: 2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .qualifier-dti {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .result-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .result-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+        
+        .result-value {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            line-height: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-subtext {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--kw-red), var(--kw-red-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 12px rgba(204, 0, 51, 0.3);
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(204, 0, 51, 0.4);
+            background: linear-gradient(135deg, var(--kw-red-light), var(--kw-red));
+        }
+        
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .info-section {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 12px;
+            border-left: 4px solid var(--kw-red);
+        }
+        
+        .info-section h3 {
+            font-family: 'Crimson Pro', serif;
+            color: var(--kw-red);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .info-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info-section li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .info-section li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--kw-red);
+            font-weight: bold;
+        }
+        
+        .surprise-banner {
+            background: linear-gradient(135deg, #ffffff 0%, var(--kw-grey-light) 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 3px solid var(--kw-red);
+            box-shadow: 0 8px 24px rgba(204, 0, 51, 0.2);
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .surprise-banner::before {
+            content: '2026';
+            position: absolute;
+            right: -20px;
+            bottom: -30px;
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(204, 0, 51, 0.05);
+            font-family: 'Crimson Pro', serif;
+            pointer-events: none;
+        }
+        
+        .rate-reality-section {
+            background: white;
+            border: 3px solid var(--kw-red);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: start;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            animation: slideUp 0.6s ease-out 0.2s both;
+        }
+        
+        .rate-icon {
+            font-size: 3rem;
+            flex-shrink: 0;
+        }
+        
+        .rate-content h3 {
+            font-family: 'Crimson Pro', serif;
+            color: var(--kw-red);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .rate-content p {
+            color: var(--text);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .rate-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .rate-highlight {
+            background: var(--kw-grey-light);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--kw-red);
+            font-weight: 500;
+        }
+        
+        .surprise-content {
+            display: flex;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        
+        .surprise-icon {
+            font-size: 3rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .surprise-text h3 {
+            font-family: 'Crimson Pro', serif;
+            color: var(--kw-red);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .surprise-text p {
+            color: var(--text);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .percentage-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        
+        .percentage-fill {
+            height: 100%;
+            background: var(--accent-gold);
+            border-radius: 4px;
+            transition: width 1s ease-out;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        
+        .kw-footer {
+            margin-top: 3rem;
+            padding: 2.5rem;
+            background: var(--kw-black);
+            color: white;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .kw-logo {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--kw-red);
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+        
+        .kw-tagline {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .kw-disclaimer {
+            font-size: 0.85rem;
+            color: var(--kw-grey-light);
+            font-style: italic;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="new-year-badge">🎊 New Year, New Home 2026 🎊</div>
+            <h1>Make 2026 Your Year to Move Up</h1>
+            <p class="subtitle">Great news for buyers! We're seeing more availability and options in our area, including price drops due to the slower winter season! Meanwhile, you've been building equity in your current home. Most sellers are shocked to discover they have $60,000-$100,000+ they can use right now. Let's unlock yours and show you what you can really afford in 2026!</p>
+        </header>
+        
+        <div class="rate-reality-section">
+            <div class="rate-icon">🔒</div>
+            <div class="rate-content">
+                <h3>"But I Don't Want to Lose My Low Rate..."</h3>
+                <p>We hear this every single day! You're hesitant to move because you're worried about giving up your great interest rate. Here's what most people don't realize: <strong>When you break down the actual monthly difference and factor in your equity, moving into your dream home costs FAR LESS than you think!</strong> 🏡✨</p>
+                <p class="rate-highlight">Yes, rates are higher now – but your equity is the game changer! 💪 Let's run YOUR numbers and show you the real difference. You might be surprised to find it's only a few hundred dollars more per month to get everything you want! 🎉</p>
+            </div>
+        </div>
+        
+        <div class="surprise-banner">
+            <div class="surprise-content">
+                <div class="surprise-icon">🎉</div>
+                <div class="surprise-text">
+                    <h3>Perfect Timing: More Options & Winter Price Drops!</h3>
+                    <p>You're tired of your current home, and here's the great news – we're seeing more availability for buyers, including price drops due to the slower winter season, while YOUR equity stays strong. That $250,000 home? With your built-up equity, your monthly payment may not be far off from what you're paying now! Start 2026 in the home you deserve – not stuck in a place you've outgrown.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calculator-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🏠</div>
+                    <h2>Current Home Details</h2>
+                </div>
+                
+                <div class="input-group">
+                    <label for="homeValue">Current Home Value</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="homeValue" placeholder="200000" value="200000">
+                    </div>
+                    <span class="help-text">Estimated current market value of your home</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="mortgageBalance">Remaining Mortgage Balance</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="mortgageBalance" placeholder="120000" value="120000">
+                    </div>
+                    <span class="help-text">What you still owe on your current mortgage</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="sellingCosts">Estimated Selling Costs</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="sellingCosts" placeholder="14000" value="14000">
+                    </div>
+                    <span class="help-text">Closing costs, repairs, title fees (approximately 6% of home value)</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💰</div>
+                    <h2>Monthly Obligations</h2>
+                </div>
+                
+                <div class="input-group">
+                    <label for="monthlyMortgage">Monthly Mortgage Payment</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="monthlyMortgage" placeholder="1200" value="1200">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="carPayments">Monthly Car Payments</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="carPayments" placeholder="450" value="450">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="utilities">Monthly Utilities</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="utilities" placeholder="200" value="200">
+                    </div>
+                    <span class="help-text">Electric, gas, water, internet, etc.</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="otherDebts">Other Monthly Debts</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="otherDebts" placeholder="300" value="300">
+                    </div>
+                    <span class="help-text">Credit cards, student loans, personal loans</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <h2>Financial Profile</h2>
+                </div>
+                
+                <div class="input-group">
+                    <label for="monthlyIncome">Gross Monthly Income</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="monthlyIncome" placeholder="6000" value="6000">
+                    </div>
+                    <span class="help-text">Total household income before taxes</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="interestRate">Expected Interest Rate</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">%</span>
+                        <input type="number" id="interestRate" placeholder="6.5" value="6.5" step="0.125" min="3" max="10">
+                    </div>
+                    <span class="help-text">Current rates are hovering around 6.5%</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="savings">Additional Savings</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="savings" placeholder="10000" value="10000">
+                    </div>
+                    <span class="help-text">Liquid savings you want to use for down payment</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="newHomePrice">New Home Target Price</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="newHomePrice" placeholder="250000" value="250000">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <button class="calculate-btn" onclick="calculateEquity()">🎊 Start 2026 Right - See What I Can Afford!</button>
+            </div>
+            
+            <div id="results" class="results-card hidden">
+                <h2>🎉 Your Affordability Reality Check</h2>
+                <div class="big-reveal">
+                    <div class="big-reveal-label">That Dream Home Really Costs You:</div>
+                    <div class="big-reveal-value" id="effectiveCost">$0</div>
+                    <div class="big-reveal-subtext">Not the full <span id="fullPrice">$450,000</span> — Your equity does the heavy lifting!</div>
+                </div>
+                
+                <div class="results-grid">
+                    <div class="result-item">
+                        <div class="result-label">💰 Your Hidden Equity</div>
+                        <div class="result-value" id="availableEquity">$0</div>
+                        <div class="result-subtext">Money you already own working for you</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">🎯 Total Down Payment Power</div>
+                        <div class="result-value" id="totalDownPayment">$0</div>
+                        <div class="result-subtext">Equity + savings combined</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">📊 Down Payment Percentage</div>
+                        <div class="result-value" id="downPaymentPercent">0%</div>
+                        <div class="result-subtext">Of your new home price</div>
+                        <div class="percentage-bar">
+                            <div class="percentage-fill" id="percentBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">✨ What You Actually Finance</div>
+                        <div class="result-value" id="newLoanAmount">$0</div>
+                        <div class="result-subtext">Much less than you thought!</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">💵 Monthly Payment Savings</div>
+                        <div class="result-value" id="monthlySavings">$0</div>
+                        <div class="result-subtext" id="savingsContext">vs. financing the full amount</div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-label">🏆 PMI Status</div>
+                        <div class="result-value" id="pmiStatus">—</div>
+                        <div class="result-subtext" id="pmiMessage">Based on down payment</div>
+                    </div>
+                </div>
+                
+                <div class="qualifier-check">
+                    <div class="qualifier-label">Your Qualification Status:</div>
+                    <div class="qualifier-status" id="qualifierStatus">
+                        <span class="qualifier-icon" id="qualifierIcon">✓</span>
+                        <span id="qualifierText">Checking your profile...</span>
+                    </div>
+                    <div class="qualifier-dti">Debt-to-Income Ratio: <strong id="dtiRatio">0%</strong> <span id="dtiStatus"></span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h3>Why 2026 Is YOUR Year to Move</h3>
+            <ul>
+                <li><strong>More Availability & Options - This Is YOUR Window:</strong> We're seeing more homes on the market, including price drops due to the slower winter season, while your equity stays strong. You've been building wealth, and now's the time to use it when there's less competition and better selection!</li>
+                <li><strong>The Numbers Work Better Than You Think:</strong> Moving up doesn't mean doubling your payment. With your equity working for you, that dream home may not be far off from what you're paying now!</li>
+                <li><strong>Stop Settling:</strong> You're tired of where you live. Life's too short to stay in a home that doesn't fit your life anymore. The conditions are finally right – let's find what does.</li>
+                <li><strong>Your Equity Didn't Disappear:</strong> Even with market changes, the equity you've built over the years is still there. You've been paying down that mortgage and building wealth – that money is real and ready to work for you.</li>
+                <li><strong>Keller Williams Has Your Back:</strong> We know this market inside and out. We'll help you take advantage of more availability and better options while maximizing the value from your current home.</li>
+            </ul>
+        </div>
+        
+        <footer class="kw-footer">
+            <div class="kw-logo">KELLER WILLIAMS</div>
+            <p class="kw-tagline">Make 2026 the year you stop settling. Let's find your perfect home.</p>
+            <p class="kw-disclaimer">*Interest rates are based on credit history and individual qualifications. This calculator is designed to give you an example of what could be done with your equity. Calculator provides estimates only. Consult with a Keller Williams agent for personalized analysis and current market conditions.</p>
+        </footer>
+    </div>
+    
+    <script>
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        function calculateEquity() {
+            // Get current home values
+            const homeValue = parseFloat(document.getElementById('homeValue').value) || 0;
+            const mortgageBalance = parseFloat(document.getElementById('mortgageBalance').value) || 0;
+            const sellingCosts = parseFloat(document.getElementById('sellingCosts').value) || 0;
+            
+            // Get monthly obligations
+            const monthlyMortgage = parseFloat(document.getElementById('monthlyMortgage').value) || 0;
+            const carPayments = parseFloat(document.getElementById('carPayments').value) || 0;
+            const utilities = parseFloat(document.getElementById('utilities').value) || 0;
+            const otherDebts = parseFloat(document.getElementById('otherDebts').value) || 0;
+            
+            // Get financial profile
+            const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+            const interestRatePercent = parseFloat(document.getElementById('interestRate').value) || 6.5;
+            const savings = parseFloat(document.getElementById('savings').value) || 0;
+            const newHomePrice = parseFloat(document.getElementById('newHomePrice').value) || 0;
+            
+            // Calculate available equity
+            const availableEquity = Math.max(0, homeValue - mortgageBalance - sellingCosts);
+            
+            // Calculate total down payment funds
+            const totalDownPayment = availableEquity + savings;
+            
+            // Calculate down payment percentage
+            const downPaymentPercent = newHomePrice > 0 ? (totalDownPayment / newHomePrice) * 100 : 0;
+            
+            // Calculate new loan amount
+            const newLoanAmount = Math.max(0, newHomePrice - totalDownPayment);
+            
+            // Calculate monthly payment savings (using user-provided interest rate)
+            const interestRate = (interestRatePercent / 100) / 12; // Monthly rate
+            const loanTermMonths = 360; // 30 years
+            
+            // Monthly payment for full price
+            const fullPayment = newHomePrice > 0 ? 
+                (newHomePrice * interestRate * Math.pow(1 + interestRate, loanTermMonths)) / 
+                (Math.pow(1 + interestRate, loanTermMonths) - 1) : 0;
+            
+            // Monthly payment with down payment
+            const actualPayment = newLoanAmount > 0 ? 
+                (newLoanAmount * interestRate * Math.pow(1 + interestRate, loanTermMonths)) / 
+                (Math.pow(1 + interestRate, loanTermMonths) - 1) : 0;
+            
+            const monthlySavings = fullPayment - actualPayment;
+            
+            // Calculate DTI (Debt-to-Income Ratio)
+            const totalMonthlyDebts = monthlyMortgage + carPayments + utilities + otherDebts;
+            const dtiRatio = monthlyIncome > 0 ? (totalMonthlyDebts / monthlyIncome) * 100 : 0;
+            
+            // Update big reveal - the effective cost
+            document.getElementById('effectiveCost').textContent = formatCurrency(newLoanAmount);
+            document.getElementById('fullPrice').textContent = formatCurrency(newHomePrice);
+            
+            // Update results
+            document.getElementById('availableEquity').textContent = formatCurrency(availableEquity);
+            document.getElementById('totalDownPayment').textContent = formatCurrency(totalDownPayment);
+            document.getElementById('downPaymentPercent').textContent = downPaymentPercent.toFixed(1) + '%';
+            document.getElementById('newLoanAmount').textContent = formatCurrency(newLoanAmount);
+            document.getElementById('monthlySavings').textContent = formatCurrency(monthlySavings);
+            
+            // Update savings context
+            document.getElementById('savingsContext').textContent = 
+                'That\'s ' + formatCurrency(monthlySavings * 12) + '/year in your pocket!';
+            
+            // Update percentage bar
+            const percentBar = document.getElementById('percentBar');
+            setTimeout(() => {
+                percentBar.style.width = Math.min(downPaymentPercent, 100) + '%';
+            }, 100);
+            
+            // Qualification Status
+            const qualifierIcon = document.getElementById('qualifierIcon');
+            const qualifierText = document.getElementById('qualifierText');
+            
+            if (dtiRatio < 36 && downPaymentPercent >= 10) {
+                qualifierIcon.textContent = '🎉';
+                qualifierText.textContent = 'Excellent! You\'re in a strong position to qualify for this home!';
+                qualifierText.style.color = '#10b981';
+            } else if (dtiRatio < 43 && downPaymentPercent >= 5) {
+                qualifierIcon.textContent = '✓';
+                qualifierText.textContent = 'Good news! You likely qualify for this home purchase!';
+                qualifierText.style.color = '#10b981';
+            } else if (dtiRatio < 50) {
+                qualifierIcon.textContent = '⚠️';
+                qualifierText.textContent = 'You may qualify with additional considerations or a lower price point';
+                qualifierText.style.color = '#f59e0b';
+            } else {
+                qualifierIcon.textContent = '📞';
+                qualifierText.textContent = 'Let\'s talk strategy - we can find the right home for your situation';
+                qualifierText.style.color = '#e8c4a0';
+            }
+            
+            // DTI Display
+            document.getElementById('dtiRatio').textContent = dtiRatio.toFixed(1) + '%';
+            const dtiStatusElement = document.getElementById('dtiStatus');
+            if (dtiRatio < 36) {
+                dtiStatusElement.textContent = '(Excellent)';
+            } else if (dtiRatio < 43) {
+                dtiStatusElement.textContent = '(Good)';
+            } else {
+                dtiStatusElement.textContent = '(Let\'s optimize this)';
+            }
+            
+            // PMI Status
+            const pmiStatusElement = document.getElementById('pmiStatus');
+            const pmiMessageElement = document.getElementById('pmiMessage');
+            
+            if (downPaymentPercent >= 20) {
+                pmiStatusElement.textContent = '✓ $0';
+                pmiMessageElement.textContent = 'You avoid PMI! Saving ~$' + 
+                    Math.round(newLoanAmount * 0.008 / 12).toLocaleString() + '/month';
+            } else if (downPaymentPercent >= 10) {
+                const pmiMonthly = (newLoanAmount * 0.008) / 12;
+                pmiStatusElement.textContent = formatCurrency(pmiMonthly) + '/mo';
+                pmiMessageElement.textContent = 'Just ' + (20 - downPaymentPercent).toFixed(1) + '% away from eliminating PMI';
+            } else {
+                const pmiMonthly = (newLoanAmount * 0.008) / 12;
+                pmiStatusElement.textContent = formatCurrency(pmiMonthly) + '/mo';
+                pmiMessageElement.textContent = 'Consider a slightly larger down payment to reduce PMI';
+            }
+            
+            // Show results with animation
+            const resultsElement = document.getElementById('results');
+            resultsElement.classList.remove('hidden');
+            setTimeout(() => {
+                resultsElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+        
+        // Auto-calculate on input change
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                if (!document.getElementById('results').classList.contains('hidden')) {
+                    calculateEquity();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
